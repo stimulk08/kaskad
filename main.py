@@ -11,7 +11,6 @@ def get_empty_matrix(height: int, width: int) -> list:
 
 element_name = 'Питан'
 k = 28
-k += 1
 p = 14
 # k0 = [0.1586, 0.0912, 0.157, 0.165, 0.0945, 0.2375]
 # m = [0, 92, 94, 95, 96, 97, 98, 100]
@@ -173,12 +172,19 @@ for i in range(1, k):
             else:
                 fa[j] = 2 * T1 * cm[j][1] * i
 
+    cp_amount = 0
+    cm_amount = 0
+
+    for z in range(count_m - 1):
+        cp_amount += cp[z][k]
+        cm_amount += cm[z][1]
+
     if i >= p:
         fa_last = T * (1 - cp_amount) * a[count_m - 1] * (1 - exp((i - k - 1) * log(l[count_m - 1])))
     else:
         fa_last = T1 * (1 - cm_amount) * a[count_m - 1] * (exp(i * log(l[count_m - 1])) - 1)
-    fa.append(fa_last)
-    fa = [0, *fa]
+    fa[count_m -1] = fa_last
+
     f_amount = sum(fa)
     for index in range(1, count_m - 1):
         c[index][i] = fa[index] / f_amount
@@ -207,7 +213,7 @@ for i in range(1, k):
     g[i] = gp[i] + gm[i]
     tet[i] = gp[i] / g[i]
 
-for i in range(1, count_m - 1):
+for i in range(1, count_m):
     for j in range(1, k):
         ccm[i][j] = cm[i][j]
         ccp[i][j] = cp[i][j]
