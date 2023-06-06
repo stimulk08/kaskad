@@ -11,7 +11,9 @@ def get_empty_matrix(height: int, width: int) -> list:
 
 element_name = 'Питан'
 k = 28
+k_count = k + 1
 p = 14
+
 # k0 = [0.1586, 0.0912, 0.157, 0.165, 0.0945, 0.2375]
 # m = [0, 92, 94, 95, 96, 97, 98, 100]
 k0 = [0.0085, 0.00016, 1.5e-9, 0.0035]
@@ -27,22 +29,22 @@ cp = get_empty_matrix(count_m, 201)
 cm = get_empty_matrix(count_m, 201)
 c = get_empty_matrix(count_m, 201)
 
-ccm = get_empty_matrix(count_m, k)
-ccp = get_empty_matrix(count_m, k)
-cc = get_empty_matrix(count_m, k)
+ccm = get_empty_matrix(count_m, k_count)
+ccp = get_empty_matrix(count_m, k_count)
+cc = get_empty_matrix(count_m, k_count)
 
-gp = get_empty_list(k)
-gm = get_empty_list(k)
-g = get_empty_list(k)
-tet = get_empty_list(k)
+gp = get_empty_list(k_count)
+gm = get_empty_list(k_count)
+g = get_empty_list(k_count)
+tet = get_empty_list(k_count)
 
-ggm = get_empty_list(k)
-ggp = get_empty_list(k)
-gg = get_empty_list(k)
+ggm = get_empty_list(k_count)
+ggp = get_empty_list(k_count)
+gg = get_empty_list(k_count)
 fi = get_empty_list(count_m)
 a = get_empty_list(count_m)
 
-for i in range(1, k):
+for i in range(1, k_count):
     xi[1][i] = f
     for j in range(2, count_m):
         xi[j][i] = exp((m[5] - m[j]) / (m[5] - m[1]) * log(xi[1][i]))
@@ -159,7 +161,7 @@ print(f'{element_name} {k_last_f}  отб. {k_last_p} отв.  {k_last_m}')
 
 fa = get_empty_list(count_m)
 
-for i in range(1, k):
+for i in range(1, k_count):
     for j in range(1, count_m - 1):
         if abs(l[j] - 1) > 1e-10:
             if i >= p:
@@ -183,7 +185,7 @@ for i in range(1, k):
         fa_last = T * (1 - cp_amount) * a[count_m - 1] * (1 - exp((i - k - 1) * log(l[count_m - 1])))
     else:
         fa_last = T1 * (1 - cm_amount) * a[count_m - 1] * (exp(i * log(l[count_m - 1])) - 1)
-    fa[count_m -1] = fa_last
+    fa[count_m - 1] = fa_last
 
     f_amount = sum(fa)
     for index in range(1, count_m - 1):
@@ -214,12 +216,12 @@ for i in range(1, k):
     tet[i] = gp[i] / g[i]
 
 for i in range(1, count_m):
-    for j in range(1, k):
+    for j in range(1, k_count):
         ccm[i][j] = cm[i][j]
         ccp[i][j] = cp[i][j]
         cc[i][j] = c[i][j]
 
-for i in range(1, k):
+for i in range(1, k_count):
     ggm[i] = gm[i]
     ggp[i] = gp[i]
     gg[i] = g[i]
@@ -227,11 +229,11 @@ for i in range(1, k):
 """CON"""
 for i in range(1, count_m - 1):
     print(F'{element_name}-{m[i]}')
-    for j in range(1, k):
+    for j in range(1, k_count):
         print(F'cm[{i},{j}]={ccm[i][j]} cp[{i},{j}]={ccp[i][j]} c[{i},{j}]={cc[i][j]}')
 
 print(F'{element_name}-{m[-1]}')
-for i in range(1, k):
+for i in range(1, k_count):
     ccm_amount = 0
     ccp_amount = 0
     cc_amount = 0
@@ -243,10 +245,15 @@ for i in range(1, k):
         F"cm[{count_m - 1},{i}]={1 - ccm_amount} cp[{count_m - 1}, {i}]={1 - ccp_amount} c[{count_m - 1}, {i}]={1 - cc_amount}")
 
 print('SIGMA')
-for i in range(1, k):
+for i in range(1, k_count):
     z1, z2, z3, z4 = ggp[i], ccp[1][i], gg[i], cc[1][i]
     f_ = ggp[i] * ccp[1][i] / gg[i] / cc[1][i]
     f1 = f_ / xi[1][i] / (1 - f_)
     f_ = ggp[i] * ccp[2][i] / gg[i] / cc[2][i]
     f2 = f_ / xi[2][i] / (1 - f_)
     print(F"sig[1,{i}]={f1} sig[2,{i}]={f2}")
+
+print()
+
+for i in range(1, len(g)):
+    print(F'gm[{i}]={gm[i]} gp[{i}]={gp[i]} g[{i}]={g[i]}')
